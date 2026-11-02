@@ -14,7 +14,7 @@ public enum InstallationError: LocalizedError {
 /// Installs only inside the selected user's Library. No shell, sudo, network,
 /// quarantine removal, or global keyboard preference edits.
 public struct Installation {
-    public static let bundleIdentifier = "dev.viettype.inputmethod"
+    public static let bundleIdentifier = "dev.viettype.inputmethod.VietType"
     public let home: URL
     private let fileManager = FileManager.default
     public var destination: URL { home.appendingPathComponent("Library/Input Methods/VietType.app") }
@@ -50,10 +50,15 @@ public struct Installation {
     }
 
     public func validate(_ bundle: URL) throws {
+        try validateBundle(bundle, allowLegacy: false)
+    }
+
+    private func validateBundle(_ bundle: URL, allowLegacy: Bool) throws {
         let plist = bundle.appendingPathComponent("Contents/Info.plist")
         guard let data = try? Data(contentsOf: plist),
               let info = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
-              info["CFBundleIdentifier"] as? String == Self.bundleIdentifier,
+              let identifier = info["CFBundleIdentifier"] as? String,
+              (identifier == Self.bundleIdentifier || (allowLegacy && identifier == "dev.viettype.inputmethod")),
               info["CFBundleExecutable"] as? String == "VietType",
               fileManager.isExecutableFile(atPath: bundle.appendingPathComponent("Contents/MacOS/VietType").path) else {
             throw InstallationError.invalidBundle
@@ -65,7 +70,7 @@ public struct Installation {
         guard attributes[.type] as? FileAttributeType == .typeDirectory else {
             throw InstallationError.conflictingDestination
         }
-        do { try validate(destination) }
+        do { try validateBundle(destination, allowLegacy: true) }
         catch { throw InstallationError.conflictingDestination }
     }
 

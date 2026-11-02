@@ -4,6 +4,8 @@ Bộ gõ tiếng Việt cho macOS, hỗ trợ **Telex và VNI**, viết bằng S
 
 **Trạng thái: beta.** Có trình cài/gỡ với giao diện, bản build universal cho Apple Silicon và Intel, kiểm thử engine, phiên nhập liệu và cài đặt. Bản beta tự động chưa có Developer ID/notarization; xem giới hạn bên dưới trước khi tải.
 
+Hiện đang xác minh việc đăng ký Input Sources trên macOS 26.5.2. Binary được giữ ở bản nháp cho đến khi hoàn tất kiểm tra đăng nhập mới và gõ thực tế; nếu chưa thấy bản tải công khai ở Releases, quá trình này chưa hoàn tất.
+
 ## Tải và cài
 
 1. Vào [Releases](https://github.com/chiennc-dev/viet-type/releases), chọn bản beta mới nhất và tải `VietType-…-universal.zip`. Đừng chọn “Source code” nếu chỉ muốn cài dùng.
@@ -69,7 +71,7 @@ Sản phẩm ở `dist/`, được bỏ khỏi Git. Cài qua script dùng cùng 
 - `Sources/VietTypeInstallerCore`: cài/cập nhật/gỡ có backup và xác minh chữ ký.
 - `Sources/VietTypeInstaller`: trình cài AppKit.
 - `Tests`: kiểm thử nội dung, luồng nhập và cài đặt trên thư mục tạm.
-- `.github/workflows`: CI trên ARM và Intel; tag beta tạo GitHub prerelease sau khi kiểm thử đạt.
+- `.github/workflows`: CI trên ARM và Intel; tag beta tạo bản nháp GitHub prerelease sau khi kiểm thử đạt; chỉ công bố sau khi kiểm tra cài và gõ thực tế.
 
 Xem [kết quả và ma trận kiểm thử](docs/QA.md), [quy trình phát hành có notarization](docs/RELEASING.md) và [CONTRIBUTING.md](CONTRIBUTING.md).
 

@@ -6,7 +6,9 @@
 2. Run `bash scripts/test.sh` and `bash scripts/package.sh`.
 3. Inspect the installer, test native input on a disposable account, and record actual results in `docs/QA.md`.
 4. Push the code to `main`, verify CI, then tag the same commit with `v$(cat VERSION)` and push that tag.
-5. Release CI runs tests and builds on macOS ARM and Intel. Only after both pass does it publish a **prerelease** with a universal installer ZIP and SHA-256 file.
+5. Release CI runs tests and builds on macOS ARM and Intel. Only after both pass does it create a **draft prerelease** with a universal installer ZIP and SHA-256 file.
+
+The draft must not be published until the native installation/typing check is recorded in `docs/QA.md`. Publish a checked beta with `gh release edit TAG --draft=false` or the Releases UI.
 
 Automatic beta packages are ad hoc signed, not Developer ID signed or notarized. This must remain prominent in release notes. Stable tags deliberately fail publication through the beta workflow.
 

@@ -83,4 +83,17 @@ final class InstallationTests: XCTestCase {
         XCTAssertThrowsError(try installation.uninstall())
         XCTAssertTrue(fm.fileExists(atPath: app.path))
     }
+
+    func testBundleMetadataMatchesInstallerAndIMKConnection() throws {
+        let project = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let data = try Data(contentsOf: project.appendingPathComponent("Resources/Info.plist"))
+        let info = try XCTUnwrap(PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any])
+        let identifier = try XCTUnwrap(info["CFBundleIdentifier"] as? String)
+        XCTAssertTrue(identifier.contains(".inputmethod."))
+        XCTAssertEqual(identifier, Installation.bundleIdentifier)
+        XCTAssertEqual(info["TISInputSourceID"] as? String, identifier)
+        XCTAssertEqual(info["InputMethodConnectionName"] as? String, "\(identifier)_Connection")
+        XCTAssertEqual(info["CFBundleExecutable"] as? String, "VietType")
+    }
 }

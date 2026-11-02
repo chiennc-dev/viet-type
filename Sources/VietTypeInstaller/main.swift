@@ -11,6 +11,13 @@ final class InstallerDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
+        let menu = NSMenu()
+        let appItem = NSMenuItem()
+        let appMenu = NSMenu(title: "VietType Installer")
+        appMenu.addItem(NSMenuItem(title: "Thoát VietType Installer", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        appItem.submenu = appMenu
+        menu.addItem(appItem)
+        NSApp.mainMenu = menu
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 570, height: 460),
                           styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
         window.title = "Cài đặt VietType"
@@ -66,10 +73,16 @@ final class InstallerDelegate: NSObject, NSApplicationDelegate {
         guard let payload = Bundle.main.resourceURL?.appendingPathComponent("VietType.app") else { return }
         do {
             let backup = try installation.install(from: payload)
+            let launchRegistration = LSRegisterURL(installation.destination as CFURL, true)
             let result = TISRegisterInputSource(installation.destination as CFURL)
+            let filter = [kTISPropertyBundleID as String: Installation.bundleIdentifier] as CFDictionary
+            let registered = TISCreateInputSourceList(filter, true)?.takeRetainedValue()
+            let discovered = registered.map { CFArrayGetCount($0) > 0 } ?? false
             status.stringValue = "Đã cài VietType. Mở cài đặt bàn phím → Text Input → Edit → + → Vietnamese → VietType. Nếu chưa thấy bộ gõ, hãy đăng xuất rồi đăng nhập lại."
                 + (backup == nil ? "" : "\nBản cũ đã được sao lưu.")
                 + (result == noErr ? "" : "\nmacOS chưa đăng ký bộ gõ (mã \(result)); cần đăng xuất/đăng nhập lại.")
+                + (launchRegistration == noErr ? "" : "\nLaunch Services chưa nhận ứng dụng (mã \(launchRegistration)).")
+                + (discovered ? "" : "\nmacOS chưa liệt kê VietType. Nếu đăng nhập lại vẫn không thấy, cần thử bản được Apple notarize.")
             installButton.title = "Cài lại VietType"
         } catch {
             showError(error)
@@ -110,10 +123,11 @@ if CommandLine.arguments.contains("--install") || CommandLine.arguments.contains
         if CommandLine.arguments.contains("--install") {
             let payload = Bundle.main.resourceURL!.appendingPathComponent("VietType.app")
             let backup = try installation.install(from: payload)
+            let launchRegistration = LSRegisterURL(installation.destination as CFURL, true)
             let result = TISRegisterInputSource(installation.destination as CFURL)
             print("Installed: \(installation.destination.path)")
             if let backup { print("Backup: \(backup.path)") }
-            print("Input Source registration: \(result). Log out and back in, then add VietType in Keyboard settings.")
+            print("Launch Services: \(launchRegistration); Input Source registration: \(result). Log out and back in, then add VietType in Keyboard settings.")
         } else {
             let backup = try installation.uninstall()
             print(backup.map { "Moved to: \($0.path)" } ?? "VietType is not installed.")
