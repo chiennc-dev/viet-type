@@ -1,6 +1,6 @@
 # Verification record
 
-Date: 2026-11-02. Initial beta preparation on Apple Silicon, Xcode 26.4 SDK / Swift 6.3. Host runtime details should be confirmed before adding manual compatibility results.
+Date: 2026-11-02. Initial beta preparation on Apple Silicon, Xcode 26.4 SDK / Swift 6.3. Host: macOS 26.5.2 (25F84).
 
 ## Automated checks
 
@@ -10,6 +10,8 @@ Date: 2026-11-02. Initial beta preparation on Apple Silicon, Xcode 26.4 SDK / Sw
 | `bash scripts/package.sh` | PASS | Universal input method and installer, ZIP, checksum |
 | `codesign --verify --deep --strict` | PASS | Ad hoc signature integrity; does not establish Apple trust |
 | `lipo -verify_arch arm64 x86_64` | PASS | Both executable slices exist; not an Intel runtime test |
+| ZIP contents, CRC and SHA-256 | PASS | Includes installer, embedded input method, license and instructions |
+| Workflow/issue YAML syntax | PASS | Ruby YAML parser |
 | Shell syntax | PASS | Bash build, test, packaging, installation and notarization scripts |
 | Installer invalid/tampered payload tests | PASS | Refuses modified payloads and preserves existing installation |
 | Existing app/symlink protection | PASS | Does not overwrite foreign data or follow destination symlinks |
