@@ -1,0 +1,22 @@
+name: Lỗi bộ gõ
+description: Báo lỗi chuyển đổi, cài đặt hoặc tương thích ứng dụng.
+body:
+  - type: input
+    id: environment
+    attributes:
+      label: macOS, Intel/Apple Silicon, phiên bản VietType
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Ứng dụng gặp lỗi và phiên bản
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Cách tái hiện
+      description: Kiểu gõ, chuỗi phím mẫu, kết quả mong đợi và thực tế. Không gửi mật khẩu hay dữ liệu cá nhân.
+    validations:
+      required: true

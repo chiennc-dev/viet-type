@@ -1,0 +1,52 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/test.sh
+      - run: bash scripts/package.sh
+      - uses: actions/upload-artifact@v4
+        if: matrix.runner == 'macos-15'
+        with:
+          name: release-package
+          path: |
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify tag and refuse an unsigned stable release
+        shell: bash
+        run: |
+          test "${GITHUB_REF_NAME}" = "v$(tr -d '\r\n' < VERSION)"
+          case "$GITHUB_REF_NAME" in
+            *-beta.*) ;;
+            *) echo 'Stable releases require the notarized distribution process in docs/RELEASING.md'; exit 1 ;;
+          esac
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-package
+          path: release
+      - name: Publish beta with installation notes and checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" release/* --verify-tag --prerelease \
+            --title "VietType ${GITHUB_REF_NAME#v} — bản dùng thử" \
+            --notes-file docs/RELEASE-NOTES.md

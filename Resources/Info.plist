@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key><string>vi</string>
+    <key>CFBundleDisplayName</key><string>VietType</string>
+    <key>CFBundleName</key><string>VietType</string>
+    <key>CFBundleExecutable</key><string>VietType</string>
+    <key>CFBundleIdentifier</key><string>dev.viettype.inputmethod</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>0.1.0</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSMinimumSystemVersion</key><string>13.0</string>
+    <key>LSBackgroundOnly</key><true/>
+    <key>NSPrincipalClass</key><string>NSApplication</string>
+    <key>InputMethodConnectionName</key><string>dev.viettype.inputmethod_Connection</string>
+    <key>InputMethodServerControllerClass</key><string>VietTypeInputController</string>
+    <key>tsInputMethodCharacterRepertoireKey</key><array><string>Latn</string></array>
+    <key>tsInputMethodIconFileKey</key><string>VietType.tiff</string>
+    <key>TISInputSourceID</key><string>dev.viettype.inputmethod</string>
+    <key>TISIntendedLanguage</key><string>vi</string>
+</dict>
+</plist>
