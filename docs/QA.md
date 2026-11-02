@@ -15,7 +15,7 @@ Date: 2026-11-02. Initial beta preparation on Apple Silicon, Xcode 26.4 SDK / Sw
 | Shell syntax | PASS | Bash build, test, packaging, installation and notarization scripts |
 | Installer invalid/tampered payload tests | PASS | Refuses modified payloads and preserves existing installation |
 | Existing app/symlink protection | PASS | Does not overwrite foreign data or follow destination symlinks |
-| GitHub CI (macOS ARM and Intel) | First Intel job PASS; ARM runner queued | Final revision results must be checked in Actions |
+| GitHub CI (macOS ARM and Intel) | PASS for code revision `26ed376` | [Run 41478788484](https://github.com/chiennc-dev/viet-type/actions/runs/41478788484): tests, universal package and artifact upload succeeded on both runners |
 
 Installer transaction tests use temporary home folders and signed dummy executables; they do not install or launch the actual system input method.
 
